@@ -1,0 +1,62 @@
+runtime:
+  # Default provider to use
+  active_provider: "openai"
+  # Which API profile to use under this provider
+  active_api: "default"
+
+output:
+  # Where got.json files are written. Fully agent-agnostic: point this at
+  # whatever location your agent/frontend reads from. Both base_dir and
+  # path_template support ${ENV_VAR} substitution and a leading "~".
+  #
+  # The frontend MUST resolve got.json using the SAME path_template so it can
+  # locate the file the backend writes.
+  #
+  # Example for OpenHands: set path_template to
+  #   "{base_dir}/{project_name}/.openhands/got/{session_id}/got.json"
+  base_dir: "~/.graph_of_trace"
+  path_template: "{base_dir}/{project_name}/{session_id}/got.json"
+
+providers:
+  openai:
+    # Configure real API Key in local.yaml or environment variables
+    api_key: "${OPENAI_API_KEY}"
+    timeout: 30
+    apis:
+      default:
+        api_base: "https://api.openai.com/v1"
+        model: "gpt-4.1-mini"
+      gpt4:
+        api_base: "https://api.openai.com/v1"
+        model: "gpt-4.1"
+
+  deepseek:
+    api_key: "${DEEPSEEK_API_KEY}"
+    timeout: 30
+    apis:
+      default:
+        api_base: "https://api.deepseek.com"
+        model: "deepseek-chat"
+
+  azure:
+    # Azure OpenAI typical config example:
+    # api_base format: https://<your-resource-name>.openai.azure.com
+    api_key: "${AZURE_OPENAI_API_KEY}"
+    timeout: 30
+    apis:
+      default:
+        api_base: "https://your-azure-resource-name.openai.azure.com"
+        deployment: "gpt-4o"         # Azure deployment name
+        api_version: "2024-02-15-preview"
+
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"
+    timeout: 30
+    apis:
+      default:
+        api_base: "https://api.anthropic.com/v1"
+        model: "claude-opus-4-8"
+        max_tokens: 1024
+        # anthropic_version: "2023-06-01"   # optional, override API version header
+
+
