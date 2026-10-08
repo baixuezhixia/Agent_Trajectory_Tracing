@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "project_name": "node-grounded-analysis-demo",
+    "session_id": "failure-demo"
+  },
+  "nodes": [
+    {
+      "id": "N001",
+      "title": "Prepare dataset",
+      "description": "Prepared and validated the training dataset.",
+      "status": "completed",
+      "parents": [],
+      "artifacts": [
+        {
+          "path": "data/training.csv",
+          "type": "dataset"
+        }
+      ]
+    },
+    {
+      "id": "N002",
+      "title": "Configure training",
+      "description": "Configured model training with batch size 128.",
+      "status": "completed",
+      "parents": [
+        {
+          "id": "N001",
+          "relation": "necessitated_by",
+          "explanation": "The training configuration depends on the prepared dataset."
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "configs/training.yaml",
+          "type": "config"
+        }
+      ]
+    },
+    {
+      "id": "N003",
+      "title": "Train model",
+      "description": "Training failed because CUDA ran out of memory while using batch size 128.",
+      "status": "failed",
+      "parents": [
+        {
+          "id": "N002",
+          "relation": "necessitated_by",
+          "explanation": "Training used the configuration produced by N002."
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "logs/training_failed.log",
+          "type": "log"
+        }
+      ]
+    },
+    {
+      "id": "N004",
+      "title": "Retry training with a smaller batch",
+      "description": "Reduced the batch size from 128 to 32 and completed training successfully.",
+      "status": "completed",
+      "parents": [
+        {
+          "id": "N003",
+          "relation": "necessitated_by",
+          "explanation": "The retry was triggered by the out-of-memory failure in N003."
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "models/model.pt",
+          "type": "checkpoint"
+        },
+        {
+          "path": "logs/training_retry.log",
+          "type": "log"
+        }
+      ]
+    }
+  ]
+}
